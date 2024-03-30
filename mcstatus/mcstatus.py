@@ -46,13 +46,6 @@ class MinecraftCog(commands.Cog):
             except Exception as e:
                 print(f"Error updating server status: {e}")
 
-    @update_server_status.before_loop
-    async def before_update_server_status(self):
-        await self.bot.wait_until_ready()  # Wait until the bot has connected to discord
-
-def setup(bot):
-    bot.add_cog(MinecraftCog(bot))
-
     @commands.command()
     async def server_status(self, ctx):
         for server_address, channel_id in zip(self.server_addresses, self.server_status_channel_ids):
