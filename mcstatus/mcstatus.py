@@ -10,8 +10,7 @@ class MinecraftCog(commands.Cog):
         self.server_addresses = ["YOUR_MINECRAFT_SERVER_IP"] # Default server IPs
         self.server_query_interval = 300 # in seconds (5 minutes)
 
-        # Define a task to periodically update the server status
-        self.update_server_status = tasks.loop(seconds=self.server_query_interval)(self.update_server_status)
+        self.update_server_status.start()  # Start the task when the cog is loaded
 
     def cog_unload(self):
         # Stop the task when the cog is unloaded
@@ -51,9 +50,8 @@ class MinecraftCog(commands.Cog):
     async def before_update_server_status(self):
         await self.bot.wait_until_ready()  # Wait until the bot has connected to discord
 
-    def setup(self, bot):
-        bot.add_cog(MinecraftCog(bot))
-        self.update_server_status.start()  # Start the task when the cog is loaded
+def setup(bot):
+    bot.add_cog(MinecraftCog(bot))
 
     @commands.command()
     async def server_status(self, ctx):
